@@ -28,3 +28,7 @@ node_modules
 # react
 
 /public
+
+# env
+.env
+*.env

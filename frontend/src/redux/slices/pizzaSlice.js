@@ -1,12 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { act } from "react";
+
+const api = import.meta.env.VITE_API_URL;
 
 export const fetchPizza = createAsyncThunk(
   "CurrentPizza/fetchPizzaStatus",
   async ({ slug, params }) => {
-    let url = `/api/pizzas/${slug}`;
+    let url = `${api}/pizzas/${slug}`;
 
     const { data } = await axios.get(url);
 

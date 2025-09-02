@@ -4,6 +4,8 @@ import React from "react";
 import { addItem } from "./../../redux/slices/cartSlice";
 import { Link } from "react-router-dom";
 
+const api = import.meta.env.VITE_API_URL;
+
 export const pizzaTypesNames = ["ტრადიციული", "თხელი"];
 export const pizzaSizes = [26, 30, 40];
 
@@ -61,7 +63,7 @@ function PizzaBlock({ title, slug, image_file, price, ingredients }) {
       <div className="pizza-block">
         <img
           className="pizza-block__image"
-          src={"/api/pizzas/image/" + image_file}
+          src={`/${api}/pizzas/image/` + image_file}
           alt="Pizza"
           loading="lazy"
         />

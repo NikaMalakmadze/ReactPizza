@@ -5,6 +5,8 @@ import qs from "qs";
 import { addItem, removeItem, deleteItem } from "./../redux/slices/cartSlice";
 import { pizzaSizes, pizzaTypesNames, sizePrices } from "./PizzaBlock";
 
+const api = import.meta.env.VITE_API_URL;
+
 const CartItem = ({
   id,
   title,
@@ -52,7 +54,7 @@ const CartItem = ({
         <div className="cart__item-img">
           <img
             className="pizza-block__image"
-            src={`/api/pizzas/image/${image_file}`}
+            src={`/${api}/pizzas/image/${image_file}`}
             alt={title + " image"}
           />
         </div>

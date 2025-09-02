@@ -2,13 +2,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const api = import.meta.env.VITE_API_URL;
+
 export const fetchPizzas = createAsyncThunk(
   "pizza/fetchPizzasStatus",
   async ({ sort, currentPage, categoryId, search }, thunkAPI) => {
     let url =
       categoryId === 0
-        ? `api/pizzas?sortBy=${sort.sortType}&page=${currentPage}&search=${search}`
-        : `api/pizza-categories/${categoryId}/pizzas?sortBy=${sort.sortType}&page=${currentPage}&search=${search}`;
+        ? `${api}/pizzas?sortBy=${sort.sortType}&page=${currentPage}&search=${search}`
+        : `${api}/pizza-categories/${categoryId}/pizzas?sortBy=${sort.sortType}&page=${currentPage}&search=${search}`;
 
     let response;
     try {
