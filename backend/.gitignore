@@ -1,0 +1,20 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+venv
+
+# env
+.env
+*.env
+
+# uplaods
+api/uploads
+
+# database
+*.db
+database/
+
+# certs
+certs/

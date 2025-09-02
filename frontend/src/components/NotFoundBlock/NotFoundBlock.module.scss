@@ -1,0 +1,19 @@
+.root {
+  padding: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  text-align: center;
+
+  span {
+    font-size: 64px;
+  }
+}
+
+.desc {
+  margin-top: 8px;
+  font-size: 18px;
+  text-align: center;
+}

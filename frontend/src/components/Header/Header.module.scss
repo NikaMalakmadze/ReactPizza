@@ -1,0 +1,26 @@
+.root {
+  :global {
+    .container {
+      flex-direction: row !important;
+      align-items: center !important;
+    }
+
+    .header__actions {
+      width: fit-content !important;
+      flex-grow: unset !important;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .container {
+        align-items: center !important;
+      }
+    }
+  }
+}
