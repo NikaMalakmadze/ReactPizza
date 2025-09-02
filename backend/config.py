@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 
-load_dotenv()
+load_dotenv('/etc/secrets/.env')
 
 BASE_DIR: Path = Path(__file__).resolve().parent
 FILES_FOLDER_NAME: str = 'uploads'
@@ -24,8 +24,8 @@ class DbSettings(BaseModel):
     UPLOAD_FOLDER: Path = BASE_DIR / "api" / FILES_FOLDER_NAME
 
 class JWT(BaseModel):
-    PRIVATE_KEY: Path = Path(os.environ.get('JWT_PRIVATE_KEY_PATH'))
-    PUBLIC_KEY: Path = Path(os.environ.get('JWT_PUBLIC_KEY_PATH'))
+    PRIVATE_KEY: Path = Path(os.environ.get('JWT_PRIVATE_KEY_PATH', '/etc/secrets/jwt-private.pem'))
+    PUBLIC_KEY: Path = Path(os.environ.get('JWT_PUBLIC_KEY_PATH', '/etc/secrets/jwt-public.pem'))
     ALGORITHM: str = 'RS256'
 
     JWT_ACCESS_TOKEN_EXPIRES: int = int(os.environ.get('JWT_ACCESS_TOKEN_EXPIRES_MINUTES'))
@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     db: DbSettings = DbSettings()
     jwt: JWT = JWT()
 
-    model_config = SettingsConfigDict(env_file='.env', extra='allow')
+    model_config = SettingsConfigDict(env_file='/etc/secrets/.env', extra='allow')
 
 settings: Settings = Settings()
 
