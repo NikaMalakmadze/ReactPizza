@@ -134,7 +134,7 @@ class PizzaResource(Resource):
             avaliable=validated_data.avaliable
         )
 
-        secure_filename: str = save_image_file(validated_data.image_file, 'pizzas')
+        secure_filename: str = save_image_file(validated_data.image_file)
 
         new_pizza.image_file = secure_filename
 
@@ -179,7 +179,7 @@ class SpecificPizzaResource(Resource):
                 pizza.image_file = update_old_image(
                     image_file,
                     pizza.image_file,
-                    settings.db.UPLOAD_FOLDER / 'pizzas'
+                    settings.db.UPLOAD_FOLDER
                 )
 
             nutrition = None
@@ -221,7 +221,7 @@ class SpecificPizzaResource(Resource):
             pizzas_ns.abort(404, f"Pizza with Slug {slug} not found")
 
         if pizza.image_file:
-            image_path = settings.db.UPLOAD_FOLDER / 'pizzas' / pizza.image_file
+            image_path = settings.db.UPLOAD_FOLDER / pizza.image_file
             if image_path.exists():
                 image_path.unlink()
 
@@ -233,7 +233,4 @@ class SpecificPizzaResource(Resource):
 @pizzas_ns.route('/image/<string:file_name>')
 class PizzaImageResource(Resource):
     def get(self, file_name: str):
-        return send_from_directory(
-            settings.db.UPLOAD_FOLDER / 'pizzas', 
-            file_name
-        )
+        return send_from_directory(settings.db.UPLOAD_FOLDER, file_name)

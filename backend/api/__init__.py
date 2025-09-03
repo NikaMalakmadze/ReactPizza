@@ -30,9 +30,9 @@ def create_app(migrate=False, drop=False):
     api.add_namespace(pizzas_ns)
     api.add_namespace(jwt_ns)
 
+    prepare_folders()
+    
     if migrate:
-        prepare_folders()
-
         with app.app_context():
             if drop:
                 db.drop_all()

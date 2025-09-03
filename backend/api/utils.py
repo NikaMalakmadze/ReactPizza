@@ -37,9 +37,9 @@ def update_old_image(
 
     return unique_name
 
-def save_image_file(file: FileStorage, image_folder: str) -> str:
+def save_image_file(file: FileStorage) -> str:
     filename: str = f'{uuid4().hex}-{secure_filename(file.filename)}'
-    file.save(settings.db.UPLOAD_FOLDER / image_folder / filename)
+    file.save(settings.db.UPLOAD_FOLDER / filename)
     return filename
 
 def slugify(name: str) -> str:

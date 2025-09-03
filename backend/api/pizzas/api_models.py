@@ -1,5 +1,4 @@
 
-from werkzeug.datastructures import FileStorage
 from flask_restx import fields
 
 from api.pizzas import pizzas_ns

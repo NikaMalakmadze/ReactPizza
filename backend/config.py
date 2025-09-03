@@ -7,8 +7,6 @@ import os
 
 load_dotenv('/etc/secrets/.env')
 
-BASE_DIR: Path = Path(__file__).resolve().parent
-FILES_FOLDER_NAME: str = 'uploads'
 AUTHORIZATIONS = {
     'JWT': {
         'type': 'apiKey',
@@ -21,7 +19,7 @@ class DbSettings(BaseModel):
     SQLALCHEMY_DATABASE_URI: str = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
 
-    UPLOAD_FOLDER: Path = BASE_DIR / "api" / FILES_FOLDER_NAME
+    UPLOAD_FOLDER: Path = Path(os.environ.get('UPLOAD_FOLDER'))
 
 class JWT(BaseModel):
     PRIVATE_KEY: Path = Path(os.environ.get('JWT_PRIVATE_KEY_PATH', '/etc/secrets/jwt-private.pem'))
