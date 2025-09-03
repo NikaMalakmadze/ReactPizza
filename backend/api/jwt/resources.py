@@ -35,7 +35,7 @@ class AdminRegisterResouce(Resource):
 
         return {
             'name': admin.name,
-            'password': admin.hashed_password.decode(),
+            'password': admin.hashed_password.decode("utf-8"),
             'access_token': access_token,
             'refresh_token': refresh_token
         }
