@@ -35,7 +35,7 @@ const PizzaInfo = () => {
           <>
             <img
               className="pizza__img"
-              src={`/${api}/pizzas/image/` + pizza.image_file}
+              src={`${api}/pizzas/image/` + pizza.image_file}
               alt=""
             />
             <PizzaBadges pizza={pizza} />

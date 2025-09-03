@@ -63,7 +63,7 @@ function PizzaBlock({ title, slug, image_file, price, ingredients }) {
       <div className="pizza-block">
         <img
           className="pizza-block__image"
-          src={`/${api}/pizzas/image/` + image_file}
+          src={`${api}/pizzas/image/` + image_file}
           alt="Pizza"
           loading="lazy"
         />
