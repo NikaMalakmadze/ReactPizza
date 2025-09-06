@@ -1,11 +1,9 @@
 
+from api.cloud.uploader import upload_image, delete_image
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 from string import ascii_letters
-from pathlib import Path
 from uuid import uuid4
-
-from config import settings
 
 GEO_TO_EN = {
     'ა': 'a', 'ბ': 'b', 'გ': 'g', 'დ': 'd', 'ე': 'e',
@@ -18,29 +16,32 @@ GEO_TO_EN = {
 }
 
 def update_old_image(
-    file: FileStorage,
-    old_filename: str,
-    upload_dir: Path,
-) -> str:
+        file: FileStorage,
+        old_public_id: str,
+        old_image_format: str
+    ) -> tuple[str]:
     
     if not file or file.filename == "":
-        return old_filename
+        return old_public_id, old_image_format
     
     filename = secure_filename(file.filename)
     unique_name = f"{uuid4().hex}_{filename}"
-    file_path = upload_dir / unique_name
-    file.save(file_path)
+    file.filename = unique_name
 
-    old_path = upload_dir / old_filename
-    if old_path.exists():
-        old_path.unlink()
+    delete_image(old_public_id)
 
-    return unique_name
+    image_info: dict[str, str] = upload_image(file)
 
-def save_image_file(file: FileStorage) -> str:
+    return image_info['public_id'], image_info['format']
+
+def save_image_file(file: FileStorage) -> tuple[str]:
     filename: str = f'{uuid4().hex}-{secure_filename(file.filename)}'
-    file.save(settings.db.UPLOAD_FOLDER / filename)
-    return filename
+
+    file.filename = filename
+
+    image_info: dict[str, str] = upload_image(file)
+
+    return image_info['public_id'], image_info['format']
 
 def slugify(name: str) -> str:
     res: str = ''

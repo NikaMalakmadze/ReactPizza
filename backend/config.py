@@ -19,7 +19,12 @@ class DbSettings(BaseModel):
     SQLALCHEMY_DATABASE_URI: str = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
 
-    UPLOAD_FOLDER: Path = Path(os.environ.get('UPLOAD_FOLDER'))
+class CloudinarySettings(BaseModel):
+    CLOUD_NAME: str = os.environ.get('CLOUDINARY_CLOUD_NAME')
+    API_KEY: str = os.environ.get('CLOUDINARY_API_KEY')
+    API_SECRET: str = os.environ.get('CLOUDINARY_API_SECRET')
+
+    BASE_URL: str = f"https://res.cloudinary.com/{CLOUD_NAME}/image/upload/"
 
 class JWT(BaseModel):
     PRIVATE_KEY: Path = Path(os.environ.get('JWT_PRIVATE_KEY_PATH', '/etc/secrets/jwt-private.pem'))
@@ -33,15 +38,13 @@ class JWT(BaseModel):
     SECRET_PASSWORD: str = str(os.environ.get('SECRET_PASSWORD'))
 
 class Settings(BaseSettings):
-    DEBUG: bool = True
     TESTING: bool = False
+    DEBUG: bool = True
 
+    cloudinary: CloudinarySettings = CloudinarySettings()
     db: DbSettings = DbSettings()
     jwt: JWT = JWT()
 
     model_config = SettingsConfigDict(env_file='/etc/secrets/.env', extra='allow')
 
 settings: Settings = Settings()
-
-def prepare_folders() -> None:
-    os.makedirs(settings.db.UPLOAD_FOLDER, exist_ok=True)

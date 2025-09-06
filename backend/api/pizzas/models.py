@@ -6,6 +6,7 @@ from sqlalchemy import ForeignKey
 
 from api.pizzas.utils import JsonList
 from api.extensions import db
+from config import settings
 
 class Pizza(db.Model):
     __tablename__ = 'pizzas'
@@ -29,7 +30,8 @@ class Pizza(db.Model):
 
     nutrition_info: Mapped[JSON] = mapped_column(JSON, nullable=False, default={})
 
-    image_file: Mapped[str] = mapped_column(String(500), nullable=False)
+    image_public_id: Mapped[str] = mapped_column(String(500), nullable=False)
+    image_format: Mapped[str] = mapped_column(String(10), nullable=False)
 
     category_id: Mapped[int] = mapped_column(ForeignKey('pizza_categories.id', ondelete='CASCADE'))
     category: Mapped['PizzaCategory'] = relationship('PizzaCategory', back_populates='pizzas')
@@ -44,6 +46,10 @@ class Pizza(db.Model):
         default=lambda: datetime.now(timezone.utc), 
         onupdate=lambda: datetime.now(timezone.utc)
     )
+
+    @property
+    def image_file(self) -> str:
+        return f"{settings.cloudinary.BASE_URL}{self.image_public_id}.{self.image_format}"
 
     def to_dict(self):
         nutrition = {

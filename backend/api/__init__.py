@@ -3,7 +3,7 @@ from flask import Flask
 
 from api.error_handlers import init_error_handlers
 from api.extensions import db, api, api_bp, cors
-from config import settings, prepare_folders
+from config import settings
 
 def create_app(migrate=False, drop=False):
     app = Flask(__name__, instance_relative_config=False)
@@ -12,7 +12,6 @@ def create_app(migrate=False, drop=False):
         TESTING=settings.TESTING,
         SQLALCHEMY_DATABASE_URI=settings.db.SQLALCHEMY_DATABASE_URI,
         SQLALCHEMY_TRACK_MODIFICATIONS=settings.db.SQLALCHEMY_TRACK_MODIFICATIONS,
-        UPLOAD_FOLDER=str(settings.db.UPLOAD_FOLDER),
     )
 
     db.init_app(app)
@@ -29,8 +28,6 @@ def create_app(migrate=False, drop=False):
     api.add_namespace(pizza_categories_ns)
     api.add_namespace(pizzas_ns)
     api.add_namespace(jwt_ns)
-
-    prepare_folders()
     
     if migrate:
         with app.app_context():

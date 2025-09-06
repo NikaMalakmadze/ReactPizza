@@ -4,7 +4,6 @@ from flask_restx.reqparse import RequestParser
 from werkzeug.exceptions import BadRequest
 from flask_restx.resource import Resource
 from flask_restx import abort, marshal
-from flask import send_from_directory
 from pydantic import ValidationError
 from flask.globals import request
 from sqlalchemy import or_
@@ -13,11 +12,11 @@ from api.pizzas.schemas import Nutrition, PizzaCreateSchema, PizzaUpdateSchema
 from api.pizzas.api_models import pizza_model, pizza_model_input
 from api.utils import update_old_image, save_image_file
 from api.jwt.decorators import jwt_required
+from api.cloud.uploader import delete_image
 from api.pizzas.models import Pizza
 from api.pizzas import pizzas_ns
 from api.extensions import db
 from api.utils import slugify
-from config import settings
 
 parser = RequestParser()
 parser.add_argument('sortBy', type=str)
@@ -134,9 +133,10 @@ class PizzaResource(Resource):
             avaliable=validated_data.avaliable
         )
 
-        secure_filename: str = save_image_file(validated_data.image_file)
+        public_id, format = save_image_file(validated_data.image_file)
 
-        new_pizza.image_file = secure_filename
+        new_pizza.image_public_id = public_id
+        new_pizza.image_format = format
 
         db.session.add(new_pizza)
         db.session.commit()
@@ -176,10 +176,10 @@ class SpecificPizzaResource(Resource):
                 pizza.ingredients = [ingredient.strip() for ingredient in ingredients]
 
             if image_file:
-                pizza.image_file = update_old_image(
+                pizza.image_public_id, pizza.image_format = update_old_image(
                     image_file,
-                    pizza.image_file,
-                    settings.db.UPLOAD_FOLDER
+                    pizza.image_public_id,
+                    pizza.image_format
                 )
 
             nutrition = None
@@ -221,16 +221,9 @@ class SpecificPizzaResource(Resource):
             pizzas_ns.abort(404, f"Pizza with Slug {slug} not found")
 
         if pizza.image_file:
-            image_path = settings.db.UPLOAD_FOLDER / pizza.image_file
-            if image_path.exists():
-                image_path.unlink()
+            delete_image(pizza.image_public_id)
 
         db.session.delete(pizza)
         db.session.commit()
 
         return '', 204
-    
-@pizzas_ns.route('/image/<string:file_name>')
-class PizzaImageResource(Resource):
-    def get(self, file_name: str):
-        return send_from_directory(settings.db.UPLOAD_FOLDER, file_name)
