@@ -1,11 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import qs from "qs";
 
 import { addItem, removeItem, deleteItem } from "./../redux/slices/cartSlice";
-import { pizzaSizes, pizzaTypesNames, sizePrices } from "./PizzaBlock";
-
-const api = import.meta.env.VITE_API_URL;
+import { pizzaSizes, pizzaTypesNames } from "./PizzaBlock";
 
 const CartItem = ({
   id,
@@ -54,8 +52,8 @@ const CartItem = ({
         <div className="cart__item-img">
           <img
             className="pizza-block__image"
-            src={`/${api}/pizzas/image/${image_file}`}
-            alt={title + " image"}
+            src={image_file}
+            alt={title + " pizza image"}
           />
         </div>
         <div className="cart__item-info">

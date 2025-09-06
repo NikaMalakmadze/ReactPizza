@@ -13,9 +13,16 @@ const Search = () => {
   const searchForPizza = React.useCallback(
     debounce((value) => {
       dispatch(setSearch(value));
+      localStorage.setItem("search", value);
     }, 500),
     []
   );
+
+  React.useEffect(() => {
+    const searchValue = localStorage.getItem("search") || "";
+    setSearchValue(searchValue);
+    dispatch(setSearch(searchValue));
+  }, []);
 
   return (
     <div className={styles.root}>

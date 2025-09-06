@@ -11,8 +11,6 @@ import PizzaStats from "./PizzaStats";
 import PizzaDesc from "./PizzaDesc";
 import React from "react";
 
-const api = import.meta.env.VITE_API_URL;
-
 const tabs = [
   { name: "დახასიათება", id: 1 },
   { name: "შემადგენლობა", id: 2 },
@@ -36,8 +34,8 @@ const PizzaInfo = () => {
             <>
               <img
                 className="pizza__img"
-                src={`${api}/pizzas/image/` + pizza.image_file}
-                alt=""
+                src={pizza.image_file}
+                alt={pizza.title}
               />
               <PizzaBadges pizza={pizza} />
             </>
