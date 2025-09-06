@@ -59,7 +59,7 @@ function PizzaBlock({ title, slug, image_file, price, ingredients }) {
         <img
           className="pizza-block__image"
           src={image_file}
-          alt={pizza.title}
+          alt={title}
           loading="lazy"
         />
         <h4 className="pizza-block__title">{title}</h4>
