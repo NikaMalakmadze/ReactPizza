@@ -3,10 +3,10 @@ from flask_restx.resource import Resource
 from pydantic import ValidationError
 from flask_restx import abort
 
-from api.jwt.api_models import register_model
-from api.jwt.schemas import ValidateRegister
+from api.jwt.schemas import ValidateRegister, ValidateTokenRefresh
+from api.jwt.api_models import register_model, refresh_model
+from api.jwt.utils import generate_tokens, verify_token
 from api.jwt.exceptions import NoAdminError
-from api.jwt.utils import generate_tokens
 from api.jwt.models import Admin
 from api.extensions import db
 from api.jwt import jwt_ns
@@ -64,6 +64,32 @@ class AdminLoginResource(Resource):
 
         new_access_token, new_refresh_token = generate_tokens(user_name=user_name)
         
+        return {
+            'access_token': new_access_token,
+            'refresh_token': new_refresh_token
+        }
+    
+@jwt_ns.route('/refresh')
+class TokenRefreshResource(Resource):
+    @jwt_ns.expect(refresh_model)
+    def post(self):
+        try:
+            validated_data: ValidateTokenRefresh = ValidateTokenRefresh(**jwt_ns.payload)
+        except ValidationError as e:
+            errors = e.errors()
+            error_messages = [f"{err['loc'][0]}: {err['msg']}" for err in errors]
+            abort(400, '; '.join(error_messages))
+
+        refresh_token: dict | None = verify_token(validated_data.refresh_token, 'refresh')
+        if not refresh_token:
+            abort(401, 'Invalid or Expired Refresh Token')
+
+        user_name: str = refresh_token.get('user_name')
+        if not user_name:
+            abort(401, 'Invalid Token Payload')
+
+        new_access_token, new_refresh_token = generate_tokens(user_name)
+
         return {
             'access_token': new_access_token,
             'refresh_token': new_refresh_token

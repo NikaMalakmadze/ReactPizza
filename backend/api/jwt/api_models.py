@@ -8,3 +8,8 @@ register_model: Model = jwt_ns.model('RegisterModel', {
     'password': fields.String,
     'secret_key': fields.String
 })
+
+refresh_model: Model = jwt_ns.model('RefreshModel', {
+    'refresh_token': fields.String,
+    'secret_key': fields.String
+})

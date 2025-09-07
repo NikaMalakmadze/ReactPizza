@@ -17,3 +17,6 @@ class ValidateSecretKey(BaseModel):
 class ValidateRegister(ValidateSecretKey):
     name: str
     password: str
+
+class ValidateTokenRefresh(ValidateSecretKey):
+    refresh_token: str
